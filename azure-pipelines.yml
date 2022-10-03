@@ -26,6 +26,7 @@ stages:
             inputs:
               versionSpec: '16.x'
             displayName: 'Install Node.js'
+          - script: cd ~/
           - script: git clone --bare https://github.com/blue0316/puppeteer-test-project.git
           - script: cd puppeteer-test-project
           - task: Npm@1
