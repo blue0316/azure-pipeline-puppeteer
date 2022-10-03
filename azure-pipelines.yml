@@ -31,7 +31,6 @@ stages:
           - script: sudo aptitude install -y npm
           - script: cd ~/
           - script: cd puppeteer-test-project
-          - script: rm package-lock.json
           - script: npm install -y
           - script: npm update -y
           - script: npm start
