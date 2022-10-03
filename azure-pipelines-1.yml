@@ -1,0 +1,33 @@
+# Node.js
+# Build a general Node.js project with npm.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+stages:
+- stage: Build
+  displayName: Build stage
+  jobs:
+  - deployment: VMDeploy
+    displayName: Web deploy
+    environment:
+      name: WebTestEnvironment
+      resourceType: VirtualMachine
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - script: sudo apt install nodejs
+          - script: sudo apt install npm
+          - script: cd ~/
+          - script: mkdir test_project
+          - script: cd test_project
+          - script: git clone https://github.com/blue0316/puppeteer-test-project.git
+          - script: cd puppeteer-test-project
+          - script: npm install
+          - script: npm start
