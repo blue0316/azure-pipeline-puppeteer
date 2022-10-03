@@ -32,8 +32,8 @@ stages:
           - script: cd ~/
           - script: cd puppeteer-test-project
           - script: |
-              yarn install
+              call yarn install
             displayName: 'yarn install'
           - script: |
-              yarn start
+              call yarn start
             displayName: 'yarn start'
