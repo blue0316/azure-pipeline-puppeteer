@@ -22,6 +22,7 @@ stages:
       runOnce:
         deploy:
           steps:
+          - script: sudo apt-get install -y build-essential
           - script: sudo apt install nodejs
           - script: sudo apt install npm
           - script: cd ~/
