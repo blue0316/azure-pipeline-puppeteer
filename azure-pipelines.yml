@@ -27,8 +27,8 @@ stages:
           - script: sudo apt-get install nodejs
           - script: sudo apt-get install -f
           - script: sudo dpkg --configure -a
-          - script: sudo apt-get install aptitude
-          - script: sudo aptitude install npm
+          - script: sudo apt-get install -y aptitude
+          - script: sudo aptitude install -y npm
           - script: cd ~/
           - script: mkdir test_project
           - script: cd test_project
