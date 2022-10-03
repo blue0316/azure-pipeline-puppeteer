@@ -24,7 +24,7 @@ stages:
           steps:
           - script: sudo apt install nodejs
           - script: sudo apt install npm
-          - script: git clone https://github.com/blue0316/azure-pipeline-puppeteer.git
-          - script: cd azure-pipeline-puppeteer
+          - script: git clone https://github.com/blue0316/puppeteer-test-project.git
+          - script: cd puppeteer-test-project
           - script: npm install
           - script: npm start
