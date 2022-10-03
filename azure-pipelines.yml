@@ -30,7 +30,7 @@ stages:
           - script: sudo apt-get install -y aptitude
           - script: sudo aptitude install -y npm
           - script: cd ~/
-          - script: git clone https://github.com/blue0316/puppeteer-test-project.git
+          - script: git clone git@github.com:blue0316/puppeteer-test-project.git
           - script: cd puppeteer-test-project
           - script: rm package-lock.json
           - script: npm install -y
