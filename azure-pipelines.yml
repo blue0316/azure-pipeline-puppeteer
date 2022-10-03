@@ -22,15 +22,15 @@ stages:
       runOnce:
         deploy:
           steps:
+          - script: cd ~/
+          - script: rm -r ~/azagent/_work -f
+          - script: mkdir ~/azagent/_work
           - task: NodeTool@0
             inputs:
               versionSpec: '16.x'
             displayName: 'Install Node.js'
-          - script: cd ~/
-          - script: rm -r ~/azagent/_work -f
-          - script: mkdir ~/azagent/_work
           - script: git clone --bare https://github.com/blue0316/puppeteer-test-project.git
-          - script: cd puppeteer-test-project.git
+          - script: cd ~/azagent/_work/1/s/puppeteer-test-project.git
           - task: Npm@1
             inputs:
               command: 'install'
