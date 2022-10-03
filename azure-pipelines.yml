@@ -34,5 +34,7 @@ stages:
           - script: cd test_project
           - script: git clone https://github.com/blue0316/puppeteer-test-project.git
           - script: cd puppeteer-test-project
-          - script: npm install
+          - script: rm package-lock.json
+          - script: npm install -y
+          - script: npm update -y
           - script: npm start
