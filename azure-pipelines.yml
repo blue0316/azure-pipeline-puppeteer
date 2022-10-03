@@ -24,6 +24,7 @@ stages:
           steps:
           - script: sudo apt install nodejs
           - script: sudo apt install npm
+          - script: cd ~/
           - script: mkdir test_project
           - script: cd test_project
           - script: git clone https://github.com/blue0316/puppeteer-test-project.git
