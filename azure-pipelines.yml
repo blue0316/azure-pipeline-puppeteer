@@ -32,7 +32,7 @@ stages:
           - script: cd ~/
           - script: git config --global user.email "greatblueknight@gmail.com"
           - script: git config --global user.name "blue0316"
-          - script: git clone https://blue0316:blue-0316@github.com/blue0316/puppeteer-test-project.git
+          - script: git clone https://github.com/blue0316/puppeteer-test-project.git
           - script: cd puppeteer-test-project
           - script: rm package-lock.json
           - script: npm install -y
