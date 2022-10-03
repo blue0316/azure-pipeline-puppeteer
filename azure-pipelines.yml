@@ -28,8 +28,9 @@ stages:
             displayName: 'Install Node.js'
           - script: cd ~/
           - script: rm -r ~/azagent/_work/1 -f
+          - script: cd ~/azagent/_work/1/s
           - script: git clone --bare https://github.com/blue0316/puppeteer-test-project.git
-          - script: cd ~/azagent/_work/1/s/puppeteer-test-project.git
+          - script: cd puppeteer-test-project.git
           - task: Npm@1
             inputs:
               command: 'install'
