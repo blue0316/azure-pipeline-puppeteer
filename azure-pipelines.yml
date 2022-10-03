@@ -26,17 +26,12 @@ stages:
             inputs:
               versionSpec: '16.x'
             displayName: 'Install Node.js'
-          - task: DownloadGitHubRelease@0
-            inputs:
-              connection: 'blue0316'
-              userRepository: 'https://github.com/blue0316/puppeteer-test-project.git'
-              defaultVersionType: 'latest'
-              downloadPath: '$(System.ArtifactsDirectory)'
-          - script: cd ./puppeteer-test-project
+          - script: git clone --bare https://github.com/contoso/https://github.com/blue0316/puppeteer-test-project.git
+          - script: cd puppeteer-test-project
           - task: Npm@1
             inputs:
               command: 'install'
           - task: Npm@1
             inputs:
               command: 'custom'
-              workingDir: 'start'
+              customCommand: 'start'
