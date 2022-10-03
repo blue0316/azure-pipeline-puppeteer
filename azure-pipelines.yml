@@ -24,7 +24,6 @@ stages:
           steps:
           - script: cd ~/
           - script: rm -r ~/azagent/_work -f
-          - script: mkdir ~/azagent/_work
           - task: NodeTool@0
             inputs:
               versionSpec: '16.x'
