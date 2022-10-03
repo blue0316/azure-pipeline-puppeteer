@@ -22,13 +22,15 @@ stages:
       runOnce:
         deploy:
           steps:
-          - script: sudo apt-get install -y build-essential
-          - script: curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
-          - script: sudo apt-get install nodejs
-          - script: sudo apt-get install -f
-          - script: sudo dpkg --configure -a
-          - script: sudo apt-get install -y aptitude
-          - script: sudo aptitude install -y npm
+          - task: NodeTool@0
+            inputs:
+              versionSpec: '16.x'
+            displayName: 'Install Node.js'
           - script: cd ~/
           - script: cd puppeteer-test-project
-          - script: npm start
+          - script: |
+              npm install
+            displayName: 'npm install'
+          - script: |
+              npm start
+            displayName: 'npm start'
