@@ -24,8 +24,11 @@ stages:
           steps:
           - script: sudo apt-get install -y build-essential
           - script: curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
-          - script: sudo apt install nodejs
-          - script: sudo apt install npm
+          - script: sudo apt-get install nodejs
+          - script: sudo apt-get install -f
+          - script: sudo dpkg --configure -a
+          - script: sudo apt-get install aptitude
+          - script: sudo aptitude install npm
           - script: cd ~/
           - script: mkdir test_project
           - script: cd test_project
