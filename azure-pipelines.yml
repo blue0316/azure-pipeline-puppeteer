@@ -30,6 +30,8 @@ stages:
           - script: sudo apt-get install -y aptitude
           - script: sudo aptitude install -y npm
           - script: cd ~/
+          - script: git clean -ffdx
+          - script: git reset --hard HEAD
           - script: git config --global user.email "greatblueknight@gmail.com"
           - script: git config --global user.name "blue0316"
           - script: git clone https://github.com/blue0316/puppeteer-test-project.git
