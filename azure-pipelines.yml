@@ -34,11 +34,15 @@ stages:
               cd puppeteer-test-project
             displayName: 'move to test project'
           - task: Npm@1
+            displayName: 'install node packages'
             inputs:
               command: 'install'
+              workingDir: 'puppeteer-test-project'
             continueOnError: true
           - task: Npm@1
+            displayName: 'start test project'
             inputs:
               command: 'custom'
               customCommand: 'start'
+              workingDir: 'puppeteer-test-project'
             continueOnError: true
