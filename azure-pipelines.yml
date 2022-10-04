@@ -34,11 +34,11 @@ stages:
           - task: Npm@1
             inputs:
               command: 'install'
-              workingDir: '$(Build.SourcesDirectory)/puppeteer-test-project'
+              workingDir: '$(Build.Repository.LocalPath)/puppeteer-test-project'
             continueOnError: true
           - task: Npm@1
             inputs:
               command: 'custom'
-              workingDir: '$(Build.SourcesDirectory)/puppeteer-test-project'
+              workingDir: '$(Build.Repository.LocalPath)/puppeteer-test-project'
               customCommand: 'start'
             continueOnError: true
