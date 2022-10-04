@@ -30,15 +30,14 @@ stages:
               git clone https://github.com/blue0316/puppeteer-test-project.git
             displayName: 'git clone'
             continueOnError: true
-          - script: cd puppeteer-test-project
           - task: Npm@1
             inputs:
               command: 'install'
-              workingDir: '/puppeteer-test-project'
+              workingDir: 'puppeteer-test-project'
             continueOnError: true
           - task: Npm@1
             inputs:
               command: 'custom'
-              workingDir: '/puppeteer-test-project'
+              workingDir: 'puppeteer-test-project'
               customCommand: 'start'
             continueOnError: true
