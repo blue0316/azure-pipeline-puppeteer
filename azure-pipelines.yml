@@ -16,7 +16,7 @@ stages:
   - deployment: VMDeploy
     displayName: Web deploy
     environment:
-      name: TestEnvironment
+      name: WebTestEnvironment
       resourceType: VirtualMachine
     strategy:
       runOnce:
