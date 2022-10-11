@@ -32,13 +32,7 @@ stages:
         scriptType: pscore
         scriptLocation: inlineScript
         inlineScript: |
-          az vm create `
-            --name ProvisionedVM `
-            --image UbuntuLTS `
-            --admin-username azureuser `
-            --location japaneast `
-            --generate-ssh-keys `
-            --resource-group $(environmentName);
+          az vm create --name ProvisionedVM --image UbuntuLTS --admin-username azureuser --location japaneast --generate-ssh-keys --resource-group $(environmentName);
     - task: AzureCLI@2
       displayName: 'Register VM to the Environment' 
       inputs:
