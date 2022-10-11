@@ -11,7 +11,6 @@ pool:
 
 variables:
   environmentName: "provision-vm-example-0001"
-  adminPassword: "Password12345!"
   token: "TokenForTest"
 
 stages:
@@ -22,27 +21,28 @@ stages:
     - task: AzureCLI@2
       displayName: 'Create Environment'
       inputs:
-        azureSubscription: 'MyAzureSubscription'
-        scriptType: pscore
-        scriptLocation: inlineScript
-        inlineScript: |
-          az group create --name $(environmentName) --location japaneast;
+        azureSubscription: 'MyAzureSubscription(f75e5af2-ade0-444e-8b38-221f69cbc9d8)'
+        scriptType: 'pscore'
+        scriptLocation: 'inlineScript'
+        inlineScript: 'az group create --name $(environmentName) --location japaneast;'
     - task: AzureCLI@2
       displayName: 'Create VM' 
       inputs:
-        azureSubscription: 'MyAzureSubscription'
+        azureSubscription: 'MyAzureSubscription(f75e5af2-ade0-444e-8b38-221f69cbc9d8)'
         scriptType: pscore
         scriptLocation: inlineScript
         inlineScript: |
           az vm create `
             --name ProvisionedVM `
-            --image Win2019Datacenter `
+            --image UbuntuLTS `
+            --admin-username azureuser`
             --admin-password "$(adminPassword)"`
+            --generate-ssh-keys `
             --resource-group $(environmentName);
     - task: AzureCLI@2
       displayName: 'Register VM to the Environment' 
       inputs:
-        azureSubscription: 'MyAzureSubscription'
+        azureSubscription: 'MyAzureSubscription(f75e5af2-ade0-444e-8b38-221f69cbc9d8)'
         scriptType: pscore
         scriptLocation: inlineScript
         inlineScript: |
