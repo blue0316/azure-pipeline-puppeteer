@@ -18,73 +18,73 @@ stages:
   jobs:
   - job:
     steps:
-    # - task: AzureCLI@2
-    #   displayName: 'Create Environment'
-    #   inputs:
-    #     azureSubscription: 'MyAzureSubscription(f75e5af2-ade0-444e-8b38-221f69cbc9d8)'
-    #     scriptType: 'pscore'
-    #     scriptLocation: 'inlineScript'
-    #     inlineScript: 'az group create --name $(environmentName) --location japaneast;'
-#     - task: AzureCLI@2
-#       displayName: 'Create VM' 
-#       inputs:
-#         azureSubscription: 'MyAzureSubscription(f75e5af2-ade0-444e-8b38-221f69cbc9d8)'
-#         scriptType: pscore
-#         scriptLocation: inlineScript
-#         inlineScript: |
-#           az vm create `
-#             --name ProvisionedVM `
-#             --image UbuntuLTS `
-#             --admin-username azureuser `
-#             --location japaneast `
-#             --generate-ssh-keys `
-#             --resource-group $(environmentName);
-#     - task: AzureCLI@2
-#       displayName: 'Register VM to the Environment' 
-#       inputs:
-#         azureSubscription: 'MyAzureSubscription(f75e5af2-ade0-444e-8b38-221f69cbc9d8)'
-#         scriptType: pscore
-#         scriptLocation: inlineScript
-#         inlineScript: |
-#           $customScriptUri = "https://raw.githubusercontent.com/blue0316/azure-pipeline-puppeteer/main/register-server-in-environment.ps1";
-#           $customScriptSettings="{`\`"fileUris`\`":[`\`"$customScriptUri`\`"], `\`"commandToExecute`\`":`\`"powershell.exe ./register-server-in-environment.ps1 -OrganizationUrl '$(System.CollectionUri)' -TeamProject '$(System.TeamProject)' -Environment '$(environmentName)' -Token '$(token)'`\`"}";
+    - task: AzureCLI@2
+      displayName: 'Create Environment'
+      inputs:
+        azureSubscription: 'MyAzureSubscription(f75e5af2-ade0-444e-8b38-221f69cbc9d8)'
+        scriptType: 'pscore'
+        scriptLocation: 'inlineScript'
+        inlineScript: 'az group create --name $(environmentName) --location japaneast;'
+    - task: AzureCLI@2
+      displayName: 'Create VM' 
+      inputs:
+        azureSubscription: 'MyAzureSubscription(f75e5af2-ade0-444e-8b38-221f69cbc9d8)'
+        scriptType: pscore
+        scriptLocation: inlineScript
+        inlineScript: |
+          az vm create `
+            --name ProvisionedVM `
+            --image UbuntuLTS `
+            --admin-username azureuser `
+            --location japaneast `
+            --generate-ssh-keys `
+            --resource-group $(environmentName);
+    - task: AzureCLI@2
+      displayName: 'Register VM to the Environment' 
+      inputs:
+        azureSubscription: 'MyAzureSubscription(f75e5af2-ade0-444e-8b38-221f69cbc9d8)'
+        scriptType: pscore
+        scriptLocation: inlineScript
+        inlineScript: |
+          $customScriptUri = "https://raw.githubusercontent.com/blue0316/azure-pipeline-puppeteer/main/register-server-in-environment.ps1";
+          $customScriptSettings="{`\`"fileUris`\`":[`\`"$customScriptUri`\`"], `\`"commandToExecute`\`":`\`"powershell.exe ./register-server-in-environment.ps1 -OrganizationUrl '$(System.CollectionUri)' -TeamProject '$(System.TeamProject)' -Environment '$(environmentName)' -Token '$(token)'`\`"}";
 
-#           az vm extension set `
-#             --name CustomScriptExtension `
-#             --publisher Microsoft.Compute `
-#             --vm-name ProvisionedVM `
-#             --resource-group $(environmentName) `
-#             --settings $customScriptSettings;
+          az vm extension set `
+            --name CustomScriptExtension `
+            --publisher Microsoft.Compute `
+            --vm-name ProvisionedVM `
+            --resource-group $(environmentName) `
+            --settings $customScriptSettings;
 
-# - stage: Test
-#   dependsOn: Provision
-#   condition: succeeded()
-#   jobs:
-#   - deployment: TestCustomTask
-#     environment:
-#       name: '$(environmentName)'
-#       resourceType: VirtualMachine
-#     strategy:
-#       runOnce:
-#         deploy:
-#           steps:
-#           - task: NodeTool@0
-#             inputs:
-#               versionSpec: '16.x'
-#             displayName: 'Install Node.js'
-#           - script: |
-#               git clone https://github.com/blue0316/puppeteer-test-project.git
-#             displayName: 'git clone'
-#             continueOnError: true
-#           - task: Npm@1
-#             displayName: 'install node packages'
-#             inputs:
-#               command: 'install'
-#               workingDir: 'puppeteer-test-project'
-#             continueOnError: true
-#           - task: Npm@1
-#             displayName: 'start test project'
-#             inputs:
-#               command: ci
-#               workingDir: 'puppeteer-test-project'
-#             continueOnError: true
+- stage: Test
+  dependsOn: Provision
+  condition: succeeded()
+  jobs:
+  - deployment: TestCustomTask
+    environment:
+      name: '$(environmentName)'
+      resourceType: VirtualMachine
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: NodeTool@0
+            inputs:
+              versionSpec: '16.x'
+            displayName: 'Install Node.js'
+          - script: |
+              git clone https://github.com/blue0316/puppeteer-test-project.git
+            displayName: 'git clone'
+            continueOnError: true
+          - task: Npm@1
+            displayName: 'install node packages'
+            inputs:
+              command: 'install'
+              workingDir: 'puppeteer-test-project'
+            continueOnError: true
+          - task: Npm@1
+            displayName: 'start test project'
+            inputs:
+              command: ci
+              workingDir: 'puppeteer-test-project'
+            continueOnError: true
