@@ -10,7 +10,7 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-  environmentName: "provision-vm-example-${{ variables['Build.SourceVersion'] }}"
+  environmentName: "provision-vm-example-0001 }}"
   adminPassword: "Password12345!"
   token: "TokenForTest"
 
