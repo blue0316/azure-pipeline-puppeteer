@@ -36,27 +36,27 @@ stages:
             --name ProvisionedVM `
             --image UbuntuLTS `
             --admin-username azureuser`
-            --admin-password "$(adminPassword)"`
+            --location japaneast`
             --generate-ssh-keys `
             --resource-group $(environmentName);
-    - task: AzureCLI@2
-      displayName: 'Register VM to the Environment' 
-      inputs:
-        azureSubscription: 'MyAzureSubscription(f75e5af2-ade0-444e-8b38-221f69cbc9d8)'
-        scriptType: pscore
-        scriptLocation: inlineScript
-        inlineScript: |
-          $customScriptUri = "https://raw.githubusercontent.com/ronaldbosma/blog-code-examples/master/ProvisionAzureVMInAzurePipelinesEnvironment/register-server-in-environment.ps1";
-          $customScriptSettings="{`\`"fileUris`\`":[`\`"$customScriptUri`\`"], `\`"commandToExecute`\`":`\`"powershell.exe ./register-server-in-environment.ps1 -OrganizationUrl '$(System.CollectionUri)' -TeamProject '$(System.TeamProject)' -Environment '$(environmentName)' -Token '$(token)'`\`"}";
+#     - task: AzureCLI@2
+#       displayName: 'Register VM to the Environment' 
+#       inputs:
+#         azureSubscription: 'MyAzureSubscription(f75e5af2-ade0-444e-8b38-221f69cbc9d8)'
+#         scriptType: pscore
+#         scriptLocation: inlineScript
+#         inlineScript: |
+#           $customScriptUri = "https://raw.githubusercontent.com/ronaldbosma/blog-code-examples/master/ProvisionAzureVMInAzurePipelinesEnvironment/register-server-in-environment.ps1";
+#           $customScriptSettings="{`\`"fileUris`\`":[`\`"$customScriptUri`\`"], `\`"commandToExecute`\`":`\`"powershell.exe ./register-server-in-environment.ps1 -OrganizationUrl '$(System.CollectionUri)' -TeamProject '$(System.TeamProject)' -Environment '$(environmentName)' -Token '$(token)'`\`"}";
 
-          az vm extension set `
-            --name CustomScriptExtension `
-            --publisher Microsoft.Compute `
-            --vm-name ProvisionedVM `
-            --resource-group $(environmentName) `
-            --settings $customScriptSettings;
+#           az vm extension set `
+#             --name CustomScriptExtension `
+#             --publisher Microsoft.Compute `
+#             --vm-name ProvisionedVM `
+#             --resource-group $(environmentName) `
+#             --settings $customScriptSettings;
 
-- stage: Test
+# - stage: Test
   dependsOn: Provision
   condition: succeeded()
   jobs:
