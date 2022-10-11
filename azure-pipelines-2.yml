@@ -22,7 +22,6 @@ stages:
     - task: AzureCLI@2
       displayName: 'Create Environment'
       inputs:
-        azureSubscription: 'Azure subscription 1'
         scriptType: pscore
         scriptLocation: inlineScript
         inlineScript: |
@@ -30,7 +29,6 @@ stages:
     - task: AzureCLI@2
       displayName: 'Create VM' 
       inputs:
-        azureSubscription: 'Azure subscription 1'
         scriptType: pscore
         scriptLocation: inlineScript
         inlineScript: |
@@ -42,7 +40,6 @@ stages:
     - task: AzureCLI@2
       displayName: 'Register VM to the Environment' 
       inputs:
-        azureSubscription: 'Azure subscription 1'
         scriptType: pscore
         scriptLocation: inlineScript
         inlineScript: |
