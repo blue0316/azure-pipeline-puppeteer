@@ -42,11 +42,11 @@ stages:
         scriptType: pscore
         scriptLocation: inlineScript
         inlineScript: |          
-          az vm extension set \
-            --name CustomScriptExtension \
-            --publisher Microsoft.Azure.Extensions \
-            --vm-name ProvisionedVM \
-            --resource-group provision-vm-example-0001 \
+          az vm extension set `
+            --name CustomScriptExtension `
+            --publisher Microsoft.Azure.Extensions `
+            --vm-name ProvisionedVM `
+            --resource-group provision-vm-example-0001 `
             --protected-settings "{`\`"fileUris`\`":[`\`"https://raw.githubusercontent.com/blue0316/azure-pipeline-puppeteer/main/register-server-in-environment.ps1`\`"], `\`"commandToExecute`\`":`\`"powershell.exe ./register-server-in-environment.ps1 -OrganizationUrl '$(System.CollectionUri)' -TeamProject '$(System.TeamProject)' -Environment '$(environmentName)' -Token '$(token)'`\`"}";
 
 - stage: Test
