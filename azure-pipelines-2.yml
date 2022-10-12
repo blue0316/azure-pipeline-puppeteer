@@ -25,15 +25,15 @@ stages:
         scriptType: 'pscore'
         scriptLocation: 'inlineScript'
         inlineScript: 'az group create --name $(environmentName) --location japaneast;'
-    - task: AzureCLI@2
-      displayName: 'Create VM'
-      continueOnError: true
-      inputs:
-        azureSubscription: 'MyAzureSubscription(f75e5af2-ade0-444e-8b38-221f69cbc9d8)'
-        scriptType: pscore
-        scriptLocation: inlineScript
-        inlineScript: |
-          az vm create --name ProvisionedVM --image UbuntuLTS --admin-username azureuser --location japaneast --generate-ssh-keys --resource-group $(environmentName);
+    # - task: AzureCLI@2
+    #   displayName: 'Create VM'
+    #   continueOnError: true
+    #   inputs:
+    #     azureSubscription: 'MyAzureSubscription(f75e5af2-ade0-444e-8b38-221f69cbc9d8)'
+    #     scriptType: pscore
+    #     scriptLocation: inlineScript
+    #     inlineScript: |
+    #       az vm create --name ProvisionedVM --image UbuntuLTS --admin-username azureuser --location japaneast --generate-ssh-keys --resource-group $(environmentName);
     - task: AzureCLI@2
       displayName: 'Register VM to the Environment' 
       continueOnError: true
@@ -49,12 +49,19 @@ stages:
             commandToExecute = "powershell.exe ./register-server-in-environment.ps1 -OrganizationUrl '$(System.CollectionUri)' -TeamProject '$(System.TeamProject)' -Environment '$(environmentName)' -Token '$(token)'"
           }
 
-          az vm extension set `
-            --name CustomScriptExtension `
-            --publisher Microsoft.Azure.Extensions `
-            --vm-name ProvisionedVM `
-            --resource-group $(environmentName) `
-            --protected-settings $customScriptSettings;
+          # az vm extension set `
+          #   --name CustomScriptExtension `
+          #   --publisher Microsoft.Azure.Extensions `
+          #   --vm-name ProvisionedVM `
+          #   --resource-group $(environmentName) `
+          #   --protected-settings $customScriptSettings;
+          
+          az vm extension set \
+            --name CustomScriptExtension \
+            --publisher Microsoft.Azure.Extensions \
+            --vm-name ProvisionedVM \
+            --resource-group provision-vm-example-0001 \
+            --protected-settings "{`\`"fileUris`\`":[`\`"https://raw.githubusercontent.com/blue0316/azure-pipeline-puppeteer/main/register-server-in-environment.ps1`\`"], `\`"commandToExecute`\`":`\`"powershell.exe ./register-server-in-environment.ps1 -OrganizationUrl '$(System.CollectionUri)' -TeamProject '$(System.TeamProject)' -Environment '$(environmentName)' -Token '$(token)'`\`"}";
 
 - stage: Test
   dependsOn: Provision
