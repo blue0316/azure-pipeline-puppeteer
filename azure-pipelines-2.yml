@@ -54,7 +54,7 @@ stages:
             --publisher Microsoft.Azure.Extensions `
             --vm-name ProvisionedVM `
             --resource-group $(environmentName) `
-            --protected-settings $customScriptSettings1
+            --protected-settings $customScriptSettings;
 
 - stage: Test
   dependsOn: Provision
