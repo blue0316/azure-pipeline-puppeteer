@@ -54,9 +54,12 @@ stages:
   condition: succeeded()
   jobs:
   - deployment: TestCustomTask
+    displayName: 'Deploy Web App'
     environment:
       name: '$(environmentName)'
       resourceType: VirtualMachine
+    pool:
+      vmImage: 'Ubuntu-latest'
     strategy:
       runOnce:
         deploy:
