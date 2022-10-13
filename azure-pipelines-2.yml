@@ -34,20 +34,27 @@ stages:
     #     scriptLocation: inlineScript
     #     inlineScript: |
     #       az vm create --name ProvisionedVM --image UbuntuLTS --admin-username azureuser --location japaneast --generate-ssh-keys --resource-group $(environmentName);
-    - task: AzureCLI@2
-      displayName: 'Register VM to the Environment' 
+    # - task: AzureCLI@2
+    #   displayName: 'Register VM to the Environment' 
+    #   continueOnError: true
+    #   inputs:
+    #     azureSubscription: 'MyAzureSubscription(f75e5af2-ade0-444e-8b38-221f69cbc9d8)'
+    #     scriptType: pscore
+    #     scriptLocation: inlineScript
+    #     inlineScript: |          
+    #       az vm extension set `
+    #         --name CustomScriptExtension `
+    #         --publisher Microsoft.Azure.Extensions `
+    #         --vm-name ProvisionedVM `
+    #         --resource-group provision-vm-example-0001 `
+    #         --protected-settings "{`\`"fileUris`\`":[`\`"https://raw.githubusercontent.com/blue0316/azure-pipeline-puppeteer/main/register-server-in-environment.ps1`\`"], `\`"commandToExecute`\`":`\`"powershell.exe ./register-server-in-environment.ps1 -OrganizationUrl '$(System.CollectionUri)' -TeamProject '$(System.TeamProject)' -Environment '$(environmentName)' -Token '$(token)'`\`"}";
+    - script: |
+        mkdir azagent; cd azagent; curl -fkSL -o vstsagent.tar.gz https://vstsagentpackage.azureedge.net/agent/2.210.1/vsts-agent-linux-x64-2.210.1.tar.gz; tar -zxvf vstsagent.tar.gz; if [ -x "$(command -v systemctl)" ]; then ./config.sh --environment --environmentname "provision-vm-example-0001" --acceptteeeula --agent $HOSTNAME --url https://dev.azure.com/shanthan0083/ --work _work --projectname 'PuppeteerTestProject' --auth PAT --token 5cbn5j2c3pki4g4txg4g47ayj3g7xhmiwjf3q2qx7ruyyujppjwa --runasservice; sudo ./svc.sh install; sudo ./svc.sh start; else ./config.sh --environment --environmentname "provision-vm-example-0001" --acceptteeeula --agent $HOSTNAME --url https://dev.azure.com/shanthan0083/ --work _work --projectname 'PuppeteerTestProject' --auth PAT --token 5cbn5j2c3pki4g4txg4g47ayj3g7xhmiwjf3q2qx7ruyyujppjwa; ./run.sh; fi
+      displayName: 'VM deployment'
       continueOnError: true
-      inputs:
-        azureSubscription: 'MyAzureSubscription(f75e5af2-ade0-444e-8b38-221f69cbc9d8)'
-        scriptType: pscore
-        scriptLocation: inlineScript
-        inlineScript: |          
-          az vm extension set `
-            --name CustomScriptExtension `
-            --publisher Microsoft.Azure.Extensions `
-            --vm-name ProvisionedVM `
-            --resource-group provision-vm-example-0001 `
-            --protected-settings "{`\`"fileUris`\`":[`\`"https://raw.githubusercontent.com/blue0316/azure-pipeline-puppeteer/main/register-server-in-environment.ps1`\`"], `\`"commandToExecute`\`":`\`"powershell.exe ./register-server-in-environment.ps1 -OrganizationUrl '$(System.CollectionUri)' -TeamProject '$(System.TeamProject)' -Environment '$(environmentName)' -Token '$(token)'`\`"}";
+      
+      
+      
 
 - stage: Test
   dependsOn: Provision
