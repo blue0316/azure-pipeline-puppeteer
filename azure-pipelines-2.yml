@@ -20,25 +20,21 @@ stages:
     steps:
     - task: AzureCLI@2
       displayName: 'Create Environment'
+      continueOnError: true
       inputs:
         azureSubscription: 'MyAzureSubscription(f75e5af2-ade0-444e-8b38-221f69cbc9d8)'
         scriptType: 'pscore'
         scriptLocation: 'inlineScript'
         inlineScript: 'az group create --name $(environmentName) --location japaneast;'
-    # - task: AzureCLI@2
-    #   displayName: 'Create VM'
-    #   continueOnError: true
-    #   inputs:
-    #     azureSubscription: 'MyAzureSubscription(f75e5af2-ade0-444e-8b38-221f69cbc9d8)'
-    #     scriptType: pscore
-    #     scriptLocation: inlineScript
-    #     inlineScript: |
-    #       az vm create --name ProvisionedVM --image UbuntuLTS --admin-username azureuser --location japaneast --generate-ssh-keys --resource-group $(environmentName);
-    # - task: Bash@3
-    #   continueOnError: true
-    #   inputs:
-    #     targetType: filePath
-    #     filePath: 'https://raw.githubusercontent.com/blue0316/azure-pipeline-puppeteer/main/register-server-in-environment.ps1'
+    - task: AzureCLI@2
+      displayName: 'Create VM'
+      continueOnError: true
+      inputs:
+        azureSubscription: 'MyAzureSubscription(f75e5af2-ade0-444e-8b38-221f69cbc9d8)'
+        scriptType: pscore
+        scriptLocation: inlineScript
+        inlineScript: |
+          az vm create --name ProvisionedVM --image UbuntuLTS --admin-username azureuser --location japaneast --generate-ssh-keys --resource-group $(environmentName);
     - task: AzureCLI@2
       continueOnError: true
       inputs:
