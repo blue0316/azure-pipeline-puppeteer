@@ -46,7 +46,6 @@ stages:
 
 - stage: Test
   dependsOn: Provision
-  condition: succeeded()
   jobs:
   - deployment: TestCustomTask
     displayName: 'Deploy Web App'
