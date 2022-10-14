@@ -23,7 +23,7 @@ stages:
       displayName: 'Create Environment'
       continueOnError: true
       inputs:
-        azureSubscription: 'ForAzureTestVM(1812e293-16cd-45ab-a6bb-750fe3bf81c4)'
+        azureSubscription: 'ServiceConnectionForAzureTestPipeline'
         scriptType: 'pscore'
         scriptLocation: 'inlineScript'
         inlineScript: 'az group create --name $(environmentName) --location japaneast;'
@@ -31,7 +31,7 @@ stages:
     #   displayName: 'Create VM'
     #   continueOnError: true
     #   inputs:
-    #     azureSubscription: 'ForAzureTestVM(1812e293-16cd-45ab-a6bb-750fe3bf81c4)'
+    #     azureSubscription: 'ServiceConnectionForAzureTestPipeline'
     #     scriptType: pscore
     #     scriptLocation: inlineScript
     #     inlineScript: |
@@ -39,7 +39,7 @@ stages:
     - task: AzureCLI@2
       continueOnError: true
       inputs:
-        azureSubscription: 'ForAzureTestVM(1812e293-16cd-45ab-a6bb-750fe3bf81c4)'
+        azureSubscription: 'ServiceConnectionForAzureTestPipeline'
         scriptType: bash
         scriptLocation: inlineScript
         inlineScript: |
