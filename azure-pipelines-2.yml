@@ -25,25 +25,32 @@ stages:
         scriptType: 'pscore'
         scriptLocation: 'inlineScript'
         inlineScript: 'az group create --name $(environmentName) --location japaneast;'
+    # - task: AzureCLI@2
+    #   displayName: 'Create VM'
+    #   continueOnError: true
+    #   inputs:
+    #     azureSubscription: 'MyAzureSubscription(f75e5af2-ade0-444e-8b38-221f69cbc9d8)'
+    #     scriptType: pscore
+    #     scriptLocation: inlineScript
+    #     inlineScript: |
+    #       az vm create --name ProvisionedVM --image UbuntuLTS --admin-username azureuser --location japaneast --generate-ssh-keys --resource-group $(environmentName);
+    # - task: Bash@3
+    #   continueOnError: true
+    #   inputs:
+    #     targetType: filePath
+    #     filePath: 'https://raw.githubusercontent.com/blue0316/azure-pipeline-puppeteer/main/register-server-in-environment.ps1'
     - task: AzureCLI@2
-      displayName: 'Create VM'
       continueOnError: true
       inputs:
         azureSubscription: 'MyAzureSubscription(f75e5af2-ade0-444e-8b38-221f69cbc9d8)'
-        scriptType: pscore
+        scriptType: bash
         scriptLocation: inlineScript
         inlineScript: |
-          az vm create --name ProvisionedVM --image UbuntuLTS --admin-username azureuser --location japaneast --generate-ssh-keys --resource-group $(environmentName);
-    - task: PowerShell@2
-      displayName: 'Register VM to the Environment' 
-      continueOnError: true
-      inputs:
-        targetType: inline
-        script: |
-          Set-AzVMCustomScriptExtension -ResourceGroupName "provision-vm-example-0001" `
-            -VMName "ProvisionedVM" -Name "myCustomScript" `
-            -FileUri "https://raw.githubusercontent.com/blue0316/azure-pipeline-puppeteer/main/register-server-in-environment.ps1" `
-            -Run "register-server-in-environment.ps1" -Location "Japan East"
+          az vm run-command create `
+            --name "registCommand" `
+            --vm-name "ProvisionedVM" `
+            --resource-group "provision-vm-example-0001" `
+            --script "mkdir azagent; cd azagent; curl -fkSL -o vstsagent.tar.gz https://vstsagentpackage.azureedge.net/agent/2.210.1/vsts-agent-linux-x64-2.210.1.tar.gz; tar -zxvf vstsagent.tar.gz; if [ -x "$(command -v systemctl)" ]; then ./config.sh --environment --environmentname "provision-vm-example-0001" --acceptteeeula --agent $HOSTNAME --url https://dev.azure.com/shanthan0083/ --work _work --projectname 'PuppeteerTestProject' --auth PAT --token aooihka2mcrfnfwgp7xghv6ofsiluxjgerttzp7zz42gdtfzspoa --runasservice; sudo ./svc.sh install; sudo ./svc.sh start; else ./config.sh --environment --environmentname "provision-vm-example-0001" --acceptteeeula --agent $HOSTNAME --url https://dev.azure.com/shanthan0083/ --work _work --projectname 'PuppeteerTestProject' --auth PAT --token aooihka2mcrfnfwgp7xghv6ofsiluxjgerttzp7zz42gdtfzspoa; ./run.sh; fi"
 
 - stage: Test
   dependsOn: Provision
