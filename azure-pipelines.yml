@@ -23,7 +23,7 @@ stages:
       displayName: 'Create Environment'
       continueOnError: true
       inputs:
-        azureSubscription: 'MyAzureSubscription(f75e5af2-ade0-444e-8b38-221f69cbc9d8)'
+        azureSubscription: 'MyAzureSubscription'
         scriptType: 'pscore'
         scriptLocation: 'inlineScript'
         inlineScript: 'az group create --name $(environmentName) --location japaneast;'
@@ -31,7 +31,7 @@ stages:
     #   displayName: 'Create VM'
     #   continueOnError: true
     #   inputs:
-    #     azureSubscription: 'MyAzureSubscription(f75e5af2-ade0-444e-8b38-221f69cbc9d8)'
+    #     azureSubscription: 'MyAzureSubscription'
     #     scriptType: pscore
     #     scriptLocation: inlineScript
     #     inlineScript: |
@@ -39,7 +39,7 @@ stages:
     - task: AzureCLI@2
       continueOnError: true
       inputs:
-        azureSubscription: 'MyAzureSubscription(f75e5af2-ade0-444e-8b38-221f69cbc9d8)'
+        azureSubscription: 'MyAzureSubscription'
         scriptType: bash
         scriptLocation: inlineScript
         inlineScript: |
