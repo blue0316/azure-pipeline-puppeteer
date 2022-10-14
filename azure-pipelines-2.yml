@@ -45,7 +45,6 @@ stages:
           az vm run-command create --name "registCommand" --vm-name "ProvisionedVM" --resource-group "provision-vm-example-0001" --script "mkdir azagent; cd azagent; curl -fkSL -o vstsagent.tar.gz https://vstsagentpackage.azureedge.net/agent/2.210.1/vsts-agent-linux-x64-2.210.1.tar.gz; tar -zxvf vstsagent.tar.gz; if [ -x "$(command -v systemctl)" ]; then ./config.sh --environment --environmentname "provision-vm-example-0001" --acceptteeeula --agent $HOSTNAME --url https://dev.azure.com/shanthan0083/ --work _work --projectname 'PuppeteerTestProject' --auth PAT --token aooihka2mcrfnfwgp7xghv6ofsiluxjgerttzp7zz42gdtfzspoa --runasservice; sudo ./svc.sh install; sudo ./svc.sh start; else ./config.sh --environment --environmentname "provision-vm-example-0001" --acceptteeeula --agent $HOSTNAME --url https://dev.azure.com/shanthan0083/ --work _work --projectname 'PuppeteerTestProject' --auth PAT --token aooihka2mcrfnfwgp7xghv6ofsiluxjgerttzp7zz42gdtfzspoa; ./run.sh; fi"
 
 - stage: Test
-  dependsOn: Provision
   displayName: Test Stage
   jobs:
   - deployment: TestCustomTask
