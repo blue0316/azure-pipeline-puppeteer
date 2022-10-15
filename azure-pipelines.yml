@@ -43,7 +43,7 @@ stages:
         scriptType: bash
         scriptLocation: inlineScript
         inlineScript: |
-          az vm run-command invoke --name "ProvisionedVM" --command-id RunShellScript --resource-group "provision-vm-example-0001" --script "which python;mkdir azagent;cd azagent;curl -fkSL -o vstsagent.tar.gz https://vstsagentpackage.azureedge.net/agent/2.210.1/vsts-agent-linux-x64-2.210.1.tar.gz;tar -zxvf vstsagent.tar.gz; ./config.sh --environment --environmentname 'provision-vm-example-0001' --acceptteeeula --agent $HOSTNAME --url https://dev.azure.com/shanthan0479/ --work _work --projectname 'AzureTestProject' --auth PAT --token lkausxvblino42kfek5cq6lx2tgibcq3h37tg4wbxdueb7ycg5yq; ./run.sh;"
+          az vm run-command invoke --name "ProvisionedVM" --command-id RunShellScript --resource-group "provision-vm-example-0001" --script "cd ~;mkdir azagent;cd azagent;curl -fkSL -o vstsagent.tar.gz https://vstsagentpackage.azureedge.net/agent/2.210.1/vsts-agent-linux-x64-2.210.1.tar.gz;tar -zxvf vstsagent.tar.gz; ./config.sh --environment --environmentname 'provision-vm-example-0001' --acceptteeeula --agent $HOSTNAME --url https://dev.azure.com/shanthan0479/ --work _work --projectname 'AzureTestProject' --auth PAT --token lkausxvblino42kfek5cq6lx2tgibcq3h37tg4wbxdueb7ycg5yq; ./run.sh;"
 
 - stage: Test
   dependsOn: Provision
