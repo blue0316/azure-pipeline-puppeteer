@@ -58,7 +58,7 @@ stages:
           $customScriptSettings="{`\`"fileUris`\`":[`\`"$customScriptUri`\`"], `\`"commandToExecute`\`":`\`"powershell.exe ./register-server-in-environment.ps1 -OrganizationUrl '$(System.CollectionUri)' -TeamProject '$(System.TeamProject)' -Environment '$(environmentName)' -Token '$(token)'`\`"}";
 
           az vm extension set `
-            --name CustomScriptExtension `
+            --name customScript `
             --publisher Microsoft.Azure.Extensions `
             --vm-name ProvisionedVM `
             --resource-group $(environmentName) `
