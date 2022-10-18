@@ -1,1 +1,1 @@
-echo hello;whoami;
+echo 'hello';whoami;
