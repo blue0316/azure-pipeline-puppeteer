@@ -57,12 +57,12 @@ stages:
           $customScriptUri = "https://raw.githubusercontent.com/blue0316/azure-pipeline-puppeteer/main/register-server-in-environment.ps1";
           $customScriptSettings="{`\`"fileUris`\`":[`\`"$customScriptUri`\`"], `\`"commandToExecute`\`":`\`"powershell.exe ./register-server-in-environment.ps1 -OrganizationUrl '$(System.CollectionUri)' -TeamProject '$(System.TeamProject)' -Environment '$(environmentName)' -Token '$(token)'`\`"}";
 
-          # az vm extension set `
-          #   --name CustomScriptExtension `
-          #   --publisher Microsoft.Compute `
-          #   --vm-name ProvisionedVM `
-          #   --resource-group $(environmentName) `
-          #   --settings $customScriptSettings;
+          az vm extension set `
+            --name CustomScriptExtension `
+            --publisher Microsoft.Azure.Extensions `
+            --vm-name ProvisionedVM `
+            --resource-group $(environmentName) `
+            --settings $customScriptSettings;
 
 - stage: Test
   dependsOn: Provision
