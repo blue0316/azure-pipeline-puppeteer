@@ -59,6 +59,7 @@ stages:
 
           az vm extension set `
             --name customScript `
+            --type CustomScriptForLinux `
             --publisher Microsoft.Azure.Extensions `
             --vm-name ProvisionedVM `
             --resource-group $(environmentName) `
