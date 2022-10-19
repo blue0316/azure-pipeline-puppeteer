@@ -12,7 +12,7 @@ pool:
 
 variables:
   environmentName: "provision-vm-example-0001"
-  token: "aooihka2mcrfnfwgp7xghv6ofsiluxjgerttzp7zz42gdtfzspoa"
+  token: "mitqpmysbrivplapzfsi4h2hp46auxpbbrkyjhje75xik3qyaw2q"
 
 stages:
 - stage: Provision
