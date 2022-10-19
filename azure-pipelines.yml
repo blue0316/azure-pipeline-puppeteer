@@ -54,16 +54,13 @@ stages:
         scriptType: pscore
         scriptLocation: inlineScript
         inlineScript: |
-          $customScriptUri = "https://raw.githubusercontent.com/blue0316/azure-pipeline-puppeteer/main/register-server-in-environment.sh";
-          $customScriptSettings="{`\`"fileUris`\`":[`\`"$customScriptUri`\`"], `\`"commandToExecute`\`":`\`"/bin/sh register-server-in-environment.sh -OrganizationUrl '$(System.CollectionUri)' -TeamProject '$(System.TeamProject)' -Environment '$(environmentName)' -Token '$(token)'`\`"}";
-          # $customScriptSettings = @{"fileUris" = @($customScriptUri); "commandToExecute" = " sh register-server-in-environment.sh";}
-          
+
           az vm extension set `
             --name CustomScript `
             --publisher Microsoft.Azure.Extensions `
             --vm-name ProvisionedVM `
             --resource-group $(environmentName) `
-            --settings $customScriptSettings;
+            --settings '{"fileUris": ["https://raw.githubusercontent.com/blue0316/azure-pipeline-puppeteer/main/register-server-in-environment.sh"],"commandToExecute": "./register-server-in-environment.sh"}'
 
 - stage: Test
   dependsOn: Provision
