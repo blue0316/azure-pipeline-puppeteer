@@ -62,6 +62,7 @@ stages:
             --resource-group $(environmentName) `
             --settings "{`\`"fileUris`\`": [`\`"https://raw.githubusercontent.com/blue0316/azure-pipeline-puppeteer/main/register-server-in-environment.sh`\`"],`\`"commandToExecute`\`": `\`"./register-server-in-environment.sh`\`"}";
 
+
 - stage: Test
   dependsOn: Provision
   condition: succeeded()
