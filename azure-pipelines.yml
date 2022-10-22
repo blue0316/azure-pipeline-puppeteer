@@ -19,23 +19,23 @@ stages:
   jobs:
   - job:
     steps:
-    # - task: AzureCLI@2
-    #   displayName: 'Create Environment'
-    #   continueOnError: true
-    #   inputs:
-    #     azureSubscription: 'ServiceConnectionForAzureTestPipeline'
-    #     scriptType: 'pscore'
-    #     scriptLocation: 'inlineScript'
-    #     inlineScript: 'az group create --name $(environmentName) --location japaneast;'
-    # - task: AzureCLI@2
-    #   displayName: 'Create VM'
-    #   continueOnError: true
-    #   inputs:
-    #     azureSubscription: 'ServiceConnectionForAzureTestPipeline'
-    #     scriptType: pscore
-    #     scriptLocation: inlineScript
-    #     inlineScript: |
-    #       az vm create --name ProvisionedVM --image UbuntuLTS --admin-username azureuser --location japaneast --generate-ssh-keys --resource-group $(environmentName);
+     - task: AzureCLI@2
+       displayName: 'Create Environment'
+       continueOnError: true
+       inputs:
+         azureSubscription: 'ServiceConnectionForAzureTestPipeline'
+         scriptType: 'pscore'
+         scriptLocation: 'inlineScript'
+         inlineScript: 'az group create --name $(environmentName) --location japaneast;'
+     - task: AzureCLI@2
+       displayName: 'Create VM'
+       continueOnError: true
+       inputs:
+         azureSubscription: 'ServiceConnectionForAzureTestPipeline'
+         scriptType: pscore
+         scriptLocation: inlineScript
+         inlineScript: |
+         az vm create --name ProvisionedVM --image UbuntuLTS --admin-username azureuser --location japaneast --generate-ssh-keys --resource-group $(environmentName);
     
     # - task: AzureCLI@2
     #   displayName: 'Register VM'
@@ -47,9 +47,9 @@ stages:
     #     inlineScript: |
     #       az vm run-command invoke --no-wait --yes --name "ProvisionedVM" --command-id RunShellScript --resource-group "provision-vm-example-0001" --script "mkdir azagent;cd azagent;curl -fkSL -o vstsagent.tar.gz https://vstsagentpackage.azureedge.net/agent/2.210.1/vsts-agent-linux-x64-2.210.1.tar.gz;tar -zxvf vstsagent.tar.gz; if [ -x "$(command -v systemctl)" ]; then ./config.sh --environment --environmentname "provision-vm-example-0001" --acceptteeeula --agent $HOSTNAME --url https://dev.azure.com/shanthan0479/ --work _work --projectname 'AzureTestProject' --auth PAT --token go5rtrvfb5tamtlewrbaturo2bnxj367mba2zfyymc3l4gmpgxpq --runasservice;sudo !!; sudo ./svc.sh install; sudo ./svc.sh start; else ./config.sh --environment --environmentname "provision-vm-example-0001" --acceptteeeula --agent $HOSTNAME --url https://dev.azure.com/shanthan0479/ --work _work --projectname 'AzureTestProject' --auth PAT --token go5rtrvfb5tamtlewrbaturo2bnxj367mba2zfyymc3l4gmpgxpq;sudo !!; ./run.sh;sudo !!; fi"
     
-    - task: AzureCLI@2
-      displayName: 'Registẹr VM'
-      inputs:
+     - task: AzureCLI@2
+       displayName: 'Registẹr VM'
+       inputs:
         azureSubscription: 'ServiceConnectionForAzureTestPipeline'
         scriptType: pscore
         scriptLocation: inlineScript
