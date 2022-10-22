@@ -55,12 +55,12 @@ stages:
         scriptLocation: inlineScript
         inlineScript: |
 
-          az vm extension set `
-            --name CustomScript `
-            --publisher Microsoft.Azure.Extensions `
-            --vm-name ProvisionedVM `
-            --resource-group $(environmentName) `
-            --settings "{'fileUris': ['https://raw.githubusercontent.com/blue0316/azure-pipeline-puppeteer/main/register-server-in-environment.sh'],'commandToExecute': './register-server-in-environment.sh'}"
+          az vm extension set \
+            --name CustomScript \
+            --publisher Microsoft.Azure.Extensions \
+            --vm-name ProvisionedVM \
+            --resource-group $(environmentName) \
+            --protected-settings "{'fileUris': ['https://raw.githubusercontent.com/blue0316/azure-pipeline-puppeteer/main/register-server-in-environment.sh'],'commandToExecute': './register-server-in-environment.sh'}"
 
 - stage: Test
   dependsOn: Provision
