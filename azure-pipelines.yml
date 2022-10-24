@@ -4,9 +4,6 @@
 # Add steps that analyze code, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
-trigger:
-- m,hu0316ain
-
 pool:
   vmImage: ubuntu-latest
 
@@ -27,6 +24,7 @@ stages:
           scriptType: 'pscore'
           scriptLocation: 'inlineScript'
           inlineScript: 'az group create --name $(environmentName) --location japaneast;'
+      
       - task: AzureCLI@2
         displayName: 'Create VM'
         continueOnError: true
@@ -35,7 +33,7 @@ stages:
           scriptType: pscore
           scriptLocation: inlineScript
           inlineScript: |
-            az vm create --name ProvisionedVM --image UbuntuLTS --admin-username azureuser --location japaneast --generate-ssh-keys --resource-group $(environmentName);
+            az vm create --name ProvisionedVM --image UbuntuLTS --location japaneast --generate-ssh-keys --resource-group $(environmentName);
     
       - task: AzureCLI@2
         displayName: 'Set web traffic'
