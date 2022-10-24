@@ -19,15 +19,6 @@ stages:
   jobs:
   - job:
     steps:
-      - task: AzureResourceManagerTemplateDeployment@3
-        inputs:
-          deploymentScope: 'Subscription'
-          azureResourceManagerConnection: 'ServiceConnectionForAzureTestPipeline'
-          subscriptionId: 'f75e5af2-ade0-444e-8b38-221f69cbc9d8'
-          location: 'Japan East'
-          templateLocation: 'Linked artifact'
-          overrideParameters: '-adminPassword ${adminPassword)'
-          deploymentMode: 'Incremental'
       - task: AzureCLI@2
         displayName: 'Create Environment'
         continueOnError: true
@@ -57,7 +48,17 @@ stages:
     #       az vm run-command invoke --no-wait --yes --name "ProvisionedVM" --command-id RunShellScript --resource-group "provision-vm-example-0001" --script "mkdir azagent;cd azagent;curl -fkSL -o vstsagent.tar.gz https://vstsagentpackage.azureedge.net/agent/2.210.1/vsts-agent-linux-x64-2.210.1.tar.gz;tar -zxvf vstsagent.tar.gz; if [ -x "$(command -v systemctl)" ]; then ./config.sh --environment --environmentname "provision-vm-example-0001" --acceptteeeula --agent $HOSTNAME --url https://dev.azure.com/shanthan0479/ --work _work --projectname 'AzureTestProject' --auth PAT --token go5rtrvfb5tamtlewrbaturo2bnxj367mba2zfyymc3l4gmpgxpq --runasservice;sudo !!; sudo ./svc.sh install; sudo ./svc.sh start; else ./config.sh --environment --environmentname "provision-vm-example-0001" --acceptteeeula --agent $HOSTNAME --url https://dev.azure.com/shanthan0479/ --work _work --projectname 'AzureTestProject' --auth PAT --token go5rtrvfb5tamtlewrbaturo2bnxj367mba2zfyymc3l4gmpgxpq;sudo !!; ./run.sh;sudo !!; fi"
     
       - task: AzureCLI@2
-        displayName: 'Registẹr VM'
+        displayName: 'Set web traffic'
+        continueOnError: true
+        inputs:
+          azureSubscription: 'ServiceConnectionForAzureTestPipeline'
+          scriptType: pscore
+          scriptLocation: inlineScript
+          inlineScript: |
+            az vm open-port --port 80 --resource-group $(environmentName) --name ProvisionedVM;
+          
+      - task: AzureCLI@2
+        displayName: 'Register VM'
         inputs:
           azureSubscription: 'ServiceConnectionForAzureTestPipeline'
           scriptType: pscore
@@ -65,12 +66,12 @@ stages:
           inlineScript: |
 
             az vm extension set `
-              --name CustomScript `
-              --type CustomScript `
               --publisher Microsoft.Azure.Extensions `
+              --version 2.0 `
+              --name CustomScript `
               --vm-name ProvisionedVM `
               --resource-group $(environmentName) `
-              --protected-settings "{`\`"fileUris`\`": [`\`"https://raw.githubusercontent.com/blue0316/azure-pipeline-puppeteer/main/register-server-in-environment.sh`\`"],`\`"commandToExecute`\`": `\`"./register-server-in-environment.sh`\`"}";
+              --settings "{`\`"fileUris`\`": [`\`"https://raw.githubusercontent.com/blue0316/azure-pipeline-puppeteer/main/register-server-in-environment.sh`\`"],`\`"commandToExecute`\`": `\`"./register-server-in-environment.sh`\`"}";
 
 
 - stage: Test
