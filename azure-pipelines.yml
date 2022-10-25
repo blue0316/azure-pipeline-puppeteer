@@ -116,7 +116,7 @@ stages:
               workingDir: 'puppeteer-test-project'
             continueOnError: true
 
-- stage: Clean Up
+- stage: CleanUp
   jobs:
   - job:
     steps:
