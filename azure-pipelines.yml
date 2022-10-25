@@ -23,7 +23,7 @@ stages:
           azureSubscription: 'ServiceConnectionForAzureTestPipeline'
           scriptType: 'pscore'
           scriptLocation: 'inlineScript'
-          inlineScript: 'az group create --name $(environmentName) --location japaneast;'
+          inlineScript: az group create --name $(environmentName) --location japaneast;
       
       - task: AzureCLI@2
         displayName: 'Create VM'
@@ -95,3 +95,16 @@ stages:
               command: ci
               workingDir: 'puppeteer-test-project'
             continueOnError: true
+
+- stage: Clean Up
+  jobs:
+  - job:
+    steps:
+      - task: AzureCLI@2
+        displayName: 'Destroy Environment'
+        continueOnError: true
+        inputs:
+          azureSubscription: 'ServiceConnectionForAzureTestPipeline'
+          scriptType: 'pscore'
+          scriptLocation: 'inlineScript'
+          inlineScript: az group delete --name $(environmentName);
