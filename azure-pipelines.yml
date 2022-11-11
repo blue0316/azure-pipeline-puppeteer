@@ -35,40 +35,40 @@ stages:
           inlineScript: |
             az vm create --name ProvisionedVM --image UbuntuLTS --location japaneast --generate-ssh-keys --resource-group $(environmentName);
     
-      - task: AzureCLI@2
-        displayName: 'Install web server'
-        continueOnError: true
-        inputs:
-          azureSubscription: 'ServiceConnectionForAzureTestPipeline'
-          scriptType: pscore
-          scriptLocation: inlineScript
-          inlineScript: |
-            az vm run-command invoke -g $(environmentName) -n ProvisionedVM --command-id RunShellScript --scripts "sudo apt-get update && sudo apt-get install -y nginx"
-
-      - task: AzureCLI@2
-        displayName: 'Set web traffic'
-        continueOnError: true
-        inputs:
-          azureSubscription: 'ServiceConnectionForAzureTestPipeline'
-          scriptType: pscore
-          scriptLocation: inlineScript
-          inlineScript: |
-            az vm open-port --port 80 --resource-group $(environmentName) --name ProvisionedVM;
-          
       # - task: AzureCLI@2
-      #   displayName: 'Register VM'
+      #   displayName: 'Install web server'
+      #   continueOnError: true
       #   inputs:
       #     azureSubscription: 'ServiceConnectionForAzureTestPipeline'
       #     scriptType: pscore
       #     scriptLocation: inlineScript
       #     inlineScript: |
-      #       az vm extension set `
-      #         --publisher Microsoft.Azure.Extensions `
-      #         --version 2.0 `
-      #         --name CustomScript `
-      #         --vm-name ProvisionedVM `
-      #         --resource-group $(environmentName) `
-      #         --settings "{`\`"fileUris`\`": [`\`"https://raw.githubusercontent.com/blue0316/azure-pipeline-puppeteer/main/register-server-in-environment.sh`\`"],`\`"commandToExecute`\`": `\`"./register-server-in-environment.sh`\`"}";
+      #       az vm run-command invoke -g $(environmentName) -n ProvisionedVM --command-id RunShellScript --scripts "sudo apt-get update && sudo apt-get install -y nginx"
+
+      # - task: AzureCLI@2
+      #   displayName: 'Set web traffic'
+      #   continueOnError: true
+      #   inputs:
+      #     azureSubscription: 'ServiceConnectionForAzureTestPipeline'
+      #     scriptType: pscore
+      #     scriptLocation: inlineScript
+      #     inlineScript: |
+      #       az vm open-port --port 80 --resource-group $(environmentName) --name ProvisionedVM;
+          
+      - task: AzureCLI@2
+        displayName: 'Register VM'
+        inputs:
+          azureSubscription: 'ServiceConnectionForAzureTestPipeline'
+          scriptType: pscore
+          scriptLocation: inlineScript
+          inlineScript: |
+            az vm extension set `
+              --publisher Microsoft.Azure.Extensions `
+              --version 2.0 `
+              --name CustomScript `
+              --vm-name ProvisionedVM `
+              --resource-group $(environmentName) `
+              --settings "{`\`"fileUris`\`": [`\`"https://raw.githubusercontent.com/blue0316/azure-pipeline-puppeteer/main/register-server-in-environment.sh`\`"],`\`"commandToExecute`\`": `\`"./register-server-in-environment.sh`\`"}";
       - task: AzureCLI@2
         displayName: 'Install web server'
         continueOnError: true
