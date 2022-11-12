@@ -59,6 +59,8 @@ stages:
           
       - task: AzureCLI@2
         displayName: 'Register VM'
+        env:
+          AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
         inputs:
           azureSubscription: 'ServiceConnectionForAzureTestPipeline'
           scriptType: pscore
