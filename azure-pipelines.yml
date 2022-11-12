@@ -11,6 +11,10 @@ variables:
   environmentName: "provision-vm-example-0001"
   token: "gcwult26jqamx36nidsyzdd4wsz2apy6zhb3uc3hxwvldml2qeiq"
 
+parameters:
+- name: application
+  type: "ubuntu_vm"
+
 stages:
 - stage: Provision
   jobs:
@@ -85,7 +89,7 @@ stages:
 
       
 
-- stage: Test
+- stage: 'QA'
   dependsOn: Provision
   condition: succeeded()
   displayName: Test Stage
@@ -93,8 +97,10 @@ stages:
   - deployment: TestCustomTask
     displayName: Deploy Web App
     environment:
-      name: provision-vm-example-0001
+      name: QA
+      # name: provision-vm-example-0001
       resourceType: VirtualMachine
+      tags: ${{ parameters.application }}
     strategy:
       runOnce:
         deploy:
