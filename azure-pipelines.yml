@@ -11,9 +11,9 @@ variables:
   environmentName: "provision-vm-example-0001"
   token: "gcwult26jqamx36nidsyzdd4wsz2apy6zhb3uc3hxwvldml2qeiq"
 
-parameters:
-- name: application
-  type: "ubuntu_vm"
+# parameters:
+# - name: application
+#   type: string
 
 stages:
 - stage: Provision
@@ -100,7 +100,7 @@ stages:
       name: QA
       # name: provision-vm-example-0001
       resourceType: VirtualMachine
-      tags: ${{ parameters.application }}
+      tags: "Foobar"
     strategy:
       runOnce:
         deploy:
