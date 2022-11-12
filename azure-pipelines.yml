@@ -19,6 +19,8 @@ stages:
       - task: AzureCLI@2
         displayName: 'Create Environment'
         continueOnError: true
+        env:
+          AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
         inputs:
           azureSubscription: 'ServiceConnectionForAzureTestPipeline'
           scriptType: 'pscore'
