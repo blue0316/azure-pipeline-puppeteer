@@ -101,31 +101,3 @@ stages:
           inlineScript: |
             az vm delete --resource-group $(environmentName) --name ProvisionedVM --yes
               
-      - task: AzureCLI@2
-        displayName: 'Destroy Environment'
-        continueOnError: true
-        inputs:
-          azureSubscription: 'ServiceConnectionForAzureTestPipeline'
-          scriptType: 'pscore'
-          scriptLocation: 'inlineScript'
-          inlineScript: |
-            az devops login --organization "$(System.CollectionUri)"
-
-            $environmentId = az devops invoke `
-              --area distributedtask `
-              --resource environments `
-              --route-parameters project="$(System.TeamProject)" `
-              --org "$(System.CollectionUri)" `
-              --api-version "6.0-preview" `
-              --query "value[?name=='$(environmentName)'].id" `
-              --output tsv
-
-            az devops invoke `
-              --area distributedtask `
-              --resource environments `
-              --route-parameters project="$(System.TeamProject)" environmentId=$environmentId `
-              --org "$(System.CollectionUri)" `
-              --http-method DELETE `
-              --api-version "6.0-preview"
-
-            az devops logout
