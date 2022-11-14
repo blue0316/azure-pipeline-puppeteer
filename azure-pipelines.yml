@@ -99,7 +99,7 @@ stages:
           scriptType: 'pscore'
           scriptLocation: 'inlineScript'
           inlineScript: |
-            az vm delete --resource-group $(environmentName) --name ProvisionedVM --force-deletion
+            az vm delete --resource-group $(environmentName) --name ProvisionedVM --force-deletion --yes
               
       - task: AzureCLI@2
         displayName: 'Destroy Environment'
