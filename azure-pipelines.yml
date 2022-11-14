@@ -87,7 +87,7 @@ stages:
     #         continueOnError: true
 
 - stage: CleanUp
-  dependsOn: Test
+  # dependsOn: Test
   jobs:
   - job:
     steps:
