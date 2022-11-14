@@ -13,6 +13,7 @@ variables:
 
 stages:
 - stage: Provision
+  displayName: VM Provision Stage
   jobs:
   - job:
     steps:
@@ -51,41 +52,42 @@ stages:
               --resource-group $(environmentName) `
               --settings "{`\`"fileUris`\`": [`\`"https://raw.githubusercontent.com/blue0316/azure-pipeline-puppeteer/main/register-server-in-environment.sh`\`"],`\`"commandToExecute`\`": `\`"./register-server-in-environment.sh`\`"}";
 
-- stage: 
-  dependsOn: Provision
-  displayName: Test Stage
-  jobs:
-  - deployment: TestCustomTask
-    displayName: Deploy Web App
-    environment:
-      name: provision-vm-example-001
-      resourceType: VirtualMachine
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - task: NodeTool@0
-            inputs:
-              versionSpec: '16.x'
-            displayName: 'Install Node.js'
-          - script: |
-              git clone https://github.com/blue0316/puppeteer-test-project.git
-            displayName: 'git clone'
-            continueOnError: true
-          - task: Npm@1
-            displayName: 'install node packages'
-            inputs:
-              command: 'install'
-              workingDir: 'puppeteer-test-project'
-            continueOnError: true
-          - task: Npm@1
-            displayName: 'start test project'
-            inputs:
-              command: ci
-              workingDir: 'puppeteer-test-project'
-            continueOnError: true
+# - stage: Test
+#   dependsOn: Provision
+#   displayName: Test Stage
+#   jobs:
+#   - deployment: TestCustomTask
+#     displayName: Deploy Web App
+#     environment:
+#       name: provision-vm-example-001
+#       resourceType: VirtualMachine
+#     strategy:
+#       runOnce:
+#         deploy:
+#           steps:
+#           - task: NodeTool@0
+#             inputs:
+#               versionSpec: '16.x'
+#             displayName: 'Install Node.js'
+#           - script: |
+#               git clone https://github.com/blue0316/puppeteer-test-project.git
+#             displayName: 'git clone'
+#             continueOnError: true
+#           - task: Npm@1
+#             displayName: 'install node packages'
+#             inputs:
+#               command: 'install'
+#               workingDir: 'puppeteer-test-project'
+#             continueOnError: true
+#           - task: Npm@1
+#             displayName: 'start test project'
+#             inputs:
+#               command: ci
+#               workingDir: 'puppeteer-test-project'
+#             continueOnError: true
 
 - stage: CleanUp
+  # dependsOn: Test
   jobs:
   - job:
     steps:
@@ -96,4 +98,24 @@ stages:
           azureSubscription: 'ServiceConnectionForAzureTestPipeline'
           scriptType: 'pscore'
           scriptLocation: 'inlineScript'
-          inlineScript: az group delete --name $(environmentName) --no-wait --yes;
+          inlineScript: |
+            "$(token)" | az devops login --organization "$(System.CollectionUri)"
+
+            $environmentId = az devops invoke `
+              --area distributedtask `
+              --resource environments `
+              --route-parameters project="$(System.TeamProject)" `
+              --org "$(System.CollectionUri)" `
+              --api-version "6.0-preview" `
+              --query "value[?name=='$(environmentName)'].id" `
+              --output tsv
+
+            az devops invoke `
+              --area distributedtask `
+              --resource environments `
+              --route-parameters project="$(System.TeamProject)" environmentId=$environmentId `
+              --org "$(System.CollectionUri)" `
+              --http-method DELETE `
+              --api-version "6.0-preview"
+
+            az devops logout
