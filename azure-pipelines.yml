@@ -99,7 +99,7 @@ stages:
           scriptType: 'pscore'
           scriptLocation: 'inlineScript'
           inlineScript: |
-            $(token) | az vm delete --resource-group $(environmentName) --name ProvisionedVM --force-deletion
+            az vm delete --resource-group $(environmentName) --name ProvisionedVM --force-deletion
               
       - task: AzureCLI@2
         displayName: 'Destroy Environment'
@@ -109,7 +109,7 @@ stages:
           scriptType: 'pscore'
           scriptLocation: 'inlineScript'
           inlineScript: |
-            $(token) | az devops login --organization "$(System.CollectionUri)"
+            az devops login --organization "$(System.CollectionUri)"
 
             $environmentId = az devops invoke `
               --area distributedtask `
