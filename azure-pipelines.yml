@@ -11,10 +11,6 @@ variables:
   environmentName: "provision-vm-example-0001"
   token: "gcwult26jqamx36nidsyzdd4wsz2apy6zhb3uc3hxwvldml2qeiq"
 
-# parameters:
-# - name: application
-#   type: string
-
 stages:
 - stage: Provision
   jobs:
