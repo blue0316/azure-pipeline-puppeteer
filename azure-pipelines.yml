@@ -37,6 +37,7 @@ stages:
     
       - task: AzureCLI@2
         displayName: 'Register VM'
+        continueOnError: true
         inputs:
           azureSubscription: 'ServiceConnectionForAzureTestPipeline'
           scriptType: pscore
