@@ -52,7 +52,6 @@ stages:
 
 - stage: 
   dependsOn: Provision
-  condition: succeeded()
   displayName: Test Stage
   jobs:
   - deployment: TestCustomTask
