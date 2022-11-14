@@ -92,6 +92,19 @@ stages:
   - job:
     steps:
       - task: AzureCLI@2
+        displayName: 'Delete VM'
+        continueOnError: true
+        inputs:
+          azureSubscription: 'ServiceConnectionForAzureTestPipeline'
+          scriptType: 'pscore'
+          scriptLocation: 'inlineScript'
+          inlineScript: |
+            az vm delete \
+              --resource-group $(environmentName) \
+              --name ProvisionedVM \
+              --force-deletion
+              
+      - task: AzureCLI@2
         displayName: 'Destroy Environment'
         continueOnError: true
         inputs:
@@ -99,7 +112,7 @@ stages:
           scriptType: 'pscore'
           scriptLocation: 'inlineScript'
           inlineScript: |
-            "$(token)" | az devops login --organization "$(System.CollectionUri)"
+            $(token) | az devops login --organization "$(System.CollectionUri)"
 
             $environmentId = az devops invoke `
               --area distributedtask `
