@@ -17,14 +17,14 @@ stages:
   jobs:
   - job:
     steps:
-      - task: AzureCLI@2
-        displayName: 'Create Environment'
-        continueOnError: true
-        inputs:
-          azureSubscription: 'ServiceConnectionForAzureTestPipeline'
-          scriptType: 'pscore'
-          scriptLocation: 'inlineScript'
-          inlineScript: az group create --name $(environmentName) --location japaneast;
+      # - task: AzureCLI@2
+      #   displayName: 'Create Environment'
+      #   continueOnError: true
+      #   inputs:
+      #     azureSubscription: 'ServiceConnectionForAzureTestPipeline'
+      #     scriptType: 'pscore'
+      #     scriptLocation: 'inlineScript'
+      #     inlineScript: az group create --name $(environmentName) --location japaneast;
       
       # - task: AzureCLI@2
       #   displayName: 'Create VM'
