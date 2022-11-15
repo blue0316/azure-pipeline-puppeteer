@@ -9,8 +9,8 @@ pool:
 
 variables:
   environmentName: "azure-pipeline-env"
-  customScriptUri: "https://raw.githubusercontent.com/blue0316/azure-pipeline-puppeteer/main/register-server-in-environment.sh"
-  token: "gcwult26jqamx36nidsyzdd4wsz2apy6zhb3uc3hxwvldml2qeiq"
+  vmName: "ProvisionedVM"
+  token: "ntuwz3vkcjuibbspgvpyltrnpeuyypr6v2c32hqtyb4oalfpmuqa"
 
 stages:
 - stage: Provision
@@ -34,7 +34,7 @@ stages:
           azureSubscription: 'ServiceConnectionForAzureTestPipeline'
           scriptType: 'pscore'
           scriptLocation: inlineScript
-          inlineScript: az vm create --name ProvisionedVM --image UbuntuLTS --location japaneast --generate-ssh-keys --resource-group $(environmentName);
+          inlineScript: az vm create --name $(vmName) --image UbuntuLTS --location japaneast --generate-ssh-keys --resource-group $(environmentName);
     
       - task: AzureCLI@2
         displayName: 'Register VM'
@@ -51,48 +51,48 @@ stages:
               --publisher Microsoft.Azure.Extensions `
               --version 2.0 `
               --name CustomScript `
-              --vm-name ProvisionedVM `
+              --vm-name $(vmName) `
               --resource-group $(environmentName) `
               --settings $customScriptSettings;
 
-- stage: Test
-  dependsOn: Provision
-  displayName: Test Stage
-  jobs:
-  - deployment: TestCustomTask
-    displayName: Deploy Web App
-    pool:
-      vmImage: 'Ubuntu-latest'
-    environment:
-      name: $(environmentName)
-      resourceType: VirtualMachine
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - task: NodeTool@0
-            displayName: 'Install Node.js'
-            inputs:
-              versionSpec: '16.x'
-          - script: |
-              git clone https://github.com/blue0316/puppeteer-test-project.git
-            displayName: 'git clone'
-            continueOnError: true
-          - task: Npm@1
-            displayName: 'install node packages'
-            inputs:
-              command: 'install'
-              workingDir: 'puppeteer-test-project'
-            continueOnError: true
-          - task: Npm@1
-            displayName: 'start test project'
-            inputs:
-              command: ci
-              workingDir: 'puppeteer-test-project'
-            continueOnError: true
+# - stage: Test
+#   dependsOn: Provision
+#   displayName: Test Stage
+#   jobs:
+#   - deployment: TestCustomTask
+#     displayName: Deploy Web App
+#     pool:
+#       vmImage: 'Ubuntu-latest'
+#     environment:
+#       name: $(environmentName)
+#       resourceType: VirtualMachine
+#     strategy:
+#       runOnce:
+#         deploy:
+#           steps:
+#           - task: NodeTool@0
+#             displayName: 'Install Node.js'
+#             inputs:
+#               versionSpec: '16.x'
+#           - script: |
+#               git clone https://github.com/blue0316/puppeteer-test-project.git
+#             displayName: 'git clone'
+#             continueOnError: true
+#           - task: Npm@1
+#             displayName: 'install node packages'
+#             inputs:
+#               command: 'install'
+#               workingDir: 'puppeteer-test-project'
+#             continueOnError: true
+#           - task: Npm@1
+#             displayName: 'start test project'
+#             inputs:
+#               command: ci
+#               workingDir: 'puppeteer-test-project'
+#             continueOnError: true
 
 - stage: CleanUp
-  dependsOn: Test
+  # dependsOn: Test
   jobs:
   - job:
     steps:
@@ -104,5 +104,5 @@ stages:
           scriptType: 'pscore'
           scriptLocation: 'inlineScript'
           inlineScript: |
-            az vm delete --resource-group $(environmentName) --name ProvisionedVM --yes
+            az vm delete --resource-group $(environmentName) --name $(vmName) --yes
               
