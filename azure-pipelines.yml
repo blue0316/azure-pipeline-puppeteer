@@ -8,7 +8,7 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-  environmentName: "provision-vm-example-0001"
+  environmentName: "azure-pipeline-env"
   customScriptUri: "https://raw.githubusercontent.com/blue0316/azure-pipeline-puppeteer/main/register-server-in-environment.sh"
   token: "gcwult26jqamx36nidsyzdd4wsz2apy6zhb3uc3hxwvldml2qeiq"
 
@@ -44,13 +44,16 @@ stages:
           scriptType: 'pscore'
           scriptLocation: inlineScript
           inlineScript: |
+            $customScriptUri = "https://raw.githubusercontent.com/blue0316/azure-pipeline-puppeteer/main/register-server-in-environment.sh";
+            $customScriptSettings="{`\`"fileUris`\`":[`\`"$customScriptUri`\`"], `\`"commandToExecute`\`":`\`"./register-server-in-environment.sh -OrganizationUrl '$(System.CollectionUri)' -TeamProject '$(System.TeamProject)' -Environment '$(environmentName)' -Token '$(token)'`\`"}";
+            echo $customScriptSettings;
             az vm extension set `
               --publisher Microsoft.Azure.Extensions `
               --version 2.0 `
               --name CustomScript `
               --vm-name ProvisionedVM `
               --resource-group $(environmentName) `
-              --settings '{ "fileUris": [ "https://raw.githubusercontent.com/blue0316/azure-pipeline-puppeteer/main/register-server-in-environment.sh"], "commandToExecute":  "./register-server-in-environment.sh"}';
+              --settings $customScriptSettings;
 
 - stage: Test
   dependsOn: Provision
@@ -61,7 +64,7 @@ stages:
     pool:
       vmImage: 'Ubuntu-latest'
     environment:
-      name: azure-pipeline-env
+      name: $(environmentName)
       resourceType: VirtualMachine
     strategy:
       runOnce:
