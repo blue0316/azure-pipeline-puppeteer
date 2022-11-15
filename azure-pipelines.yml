@@ -53,7 +53,7 @@ stages:
               --settings "{`\`"fileUris`\`": [`\`"https://raw.githubusercontent.com/blue0316/azure-pipeline-puppeteer/main/register-server-in-environment.sh`\`"],`\`"commandToExecute`\`": `\`"./register-server-in-environment.sh`\`"}";
 
 - stage: Test
-  dependsOn: Provisiondir
+  dependsOn: Provision
   displayName: Test Stage
   jobs:
   - deployment: TestCustomTask
