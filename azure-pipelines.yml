@@ -26,15 +26,15 @@ stages:
           scriptLocation: 'inlineScript'
           inlineScript: az group create --name $(environmentName) --location japaneast;
       
-      - task: AzureCLI@2
-        displayName: 'Create VM'
-        continueOnError: true
-        inputs:
-          azureSubscription: 'ServiceConnectionForAzureTestPipeline'
-          scriptType: pscore
-          scriptLocation: inlineScript
-          inlineScript: |
-            az vm create --name ProvisionedVM --image UbuntuLTS --location japaneast --generate-ssh-keys --resource-group $(environmentName);
+      # - task: AzureCLI@2
+      #   displayName: 'Create VM'
+      #   continueOnError: true
+      #   inputs:
+      #     azureSubscription: 'ServiceConnectionForAzureTestPipeline'
+      #     scriptType: pscore
+      #     scriptLocation: inlineScript
+      #     inlineScript: |
+      #       az vm create --name ProvisionedVM --image UbuntuLTS --location japaneast --generate-ssh-keys --resource-group $(environmentName);
     
       - task: AzureCLI@2
         displayName: 'Register VM'
@@ -48,7 +48,8 @@ stages:
               --publisher Microsoft.Azure.Extensions `
               --version 2.0 `
               --name CustomScript `
-              --vm-name ProvisionedVM `
+              # --vm-name ProvisionedVM `
+              --vm-name LinuxVM `
               --resource-group $(environmentName) `
               --settings "{`\`"fileUris`\`": [`\`"https://raw.githubusercontent.com/blue0316/azure-pipeline-puppeteer/main/register-server-in-environment.sh`\`"],`\`"commandToExecute`\`": `\`"./register-server-in-environment.sh`\`"}";
 
@@ -61,7 +62,7 @@ stages:
     pool:
       vmImage: 'Ubuntu-latest'
     environment:
-      name: provision-vm-example-0002
+      name: provision-vm-example-0001
       resourceType: VirtualMachine
     strategy:
       runOnce:
