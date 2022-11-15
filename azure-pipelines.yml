@@ -48,7 +48,7 @@ stages:
               --publisher Microsoft.Azure.Extensions `
               --version 2.0 `
               --name CustomScript `
-              --vm-name LinuxVM `
+              --vm-name LinuxVMTest `
               --resource-group $(environmentName) `
               --settings "{`\`"fileUris`\`": [`\`"https://raw.githubusercontent.com/blue0316/azure-pipeline-puppeteer/main/register-server-in-environment.sh`\`"],`\`"commandToExecute`\`": `\`"./register-server-in-environment.sh`\`"}";
 
