@@ -58,8 +58,10 @@ stages:
   jobs:
   - deployment: TestCustomTask
     displayName: Deploy Web App
+    pool:
+      vmImage: 'Ubuntu-latest'
     environment:
-      name: provision-vm-example-0001
+      name: provision-vm-example-0002
       resourceType: VirtualMachine
     strategy:
       runOnce:
