@@ -26,30 +26,30 @@ stages:
           scriptLocation: 'inlineScript'
           inlineScript: az group create --name $(environmentName) --location japaneast;
       
-      - task: AzureCLI@2
-        displayName: 'Create VM'
-        continueOnError: true
-        inputs:
-          azureSubscription: 'ServiceConnectionForAzureTestPipeline'
-          scriptType: 'pscore'
-          scriptLocation: inlineScript
-          inlineScript: az vm create --name ProvisionedVM --image UbuntuLTS --location japaneast --generate-ssh-keys --resource-group $(environmentName);
+      # - task: AzureCLI@2
+      #   displayName: 'Create VM'
+      #   continueOnError: true
+      #   inputs:
+      #     azureSubscription: 'ServiceConnectionForAzureTestPipeline'
+      #     scriptType: 'pscore'
+      #     scriptLocation: inlineScript
+      #     inlineScript: az vm create --name ProvisionedVM --image UbuntuLTS --location japaneast --generate-ssh-keys --resource-group $(environmentName);
     
-      - task: AzureCLI@2
-        displayName: 'Register VM'
-        continueOnError: true
-        inputs:
-          azureSubscription: 'ServiceConnectionForAzureTestPipeline'
-          scriptType: 'pscore'
-          scriptLocation: inlineScript
-          inlineScript: |
-            az vm extension set `
-              --publisher Microsoft.Azure.Extensions `
-              --version 2.0 `
-              --name CustomScript `
-              --vm-name ProvisionedVM `
-              --resource-group $(environmentName) `
-              --settings "{`\`"fileUris`\`": [`\`"https://raw.githubusercontent.com/blue0316/azure-pipeline-puppeteer/main/register-server-in-environment.sh`\`"],`\`"commandToExecute`\`": `\`"./register-server-in-environment.sh`\`"}";
+      # - task: AzureCLI@2
+      #   displayName: 'Register VM'
+      #   continueOnError: true
+      #   inputs:
+      #     azureSubscription: 'ServiceConnectionForAzureTestPipeline'
+      #     scriptType: 'pscore'
+      #     scriptLocation: inlineScript
+      #     inlineScript: |
+      #       az vm extension set `
+      #         --publisher Microsoft.Azure.Extensions `
+      #         --version 2.0 `
+      #         --name CustomScript `
+      #         --vm-name ProvisionedVM `
+      #         --resource-group $(environmentName) `
+      #         --settings "{`\`"fileUris`\`": [`\`"https://raw.githubusercontent.com/blue0316/azure-pipeline-puppeteer/main/register-server-in-environment.sh`\`"],`\`"commandToExecute`\`": `\`"./register-server-in-environment.sh`\`"}";
 
 # - stage: Test
 #   dependsOn: Provision
@@ -87,18 +87,18 @@ stages:
 #               workingDir: 'puppeteer-test-project'
 #             continueOnError: true
 
-- stage: CleanUp
-  # dependsOn: Test
-  jobs:
-  - job:
-    steps:
-      - task: AzureCLI@2
-        displayName: 'Delete VM'
-        continueOnError: true
-        inputs:
-          azureSubscription: 'ServiceConnectionForAzureTestPipeline'
-          scriptType: 'pscore'
-          scriptLocation: 'inlineScript'
-          inlineScript: |
-            az vm delete --resource-group $(environmentName) --name ProvisionedVM --yes
+# - stage: CleanUp
+#   dependsOn: Test
+#   jobs:
+#   - job:
+#     steps:
+#       - task: AzureCLI@2
+#         displayName: 'Delete VM'
+#         continueOnError: true
+#         inputs:
+#           azureSubscription: 'ServiceConnectionForAzureTestPipeline'
+#           scriptType: 'pscore'
+#           scriptLocation: 'inlineScript'
+#           inlineScript: |
+#             az vm delete --resource-group $(environmentName) --name ProvisionedVM --yes
               
