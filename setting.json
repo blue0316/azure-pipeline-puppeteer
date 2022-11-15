@@ -1,0 +1,6 @@
+{
+    "fileUris": [
+        "https://raw.githubusercontent.com/blue0316/azure-pipeline-puppeteer/main/register-server-in-environment.sh"
+    ],
+    "commandToExecute": "./register-server-in-environment.sh"
+}
