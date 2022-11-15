@@ -31,17 +31,16 @@ stages:
         continueOnError: true
         inputs:
           azureSubscription: 'ServiceConnectionForAzureTestPipeline'
-          scriptType: pscore
+          scriptType: 'pscore'
           scriptLocation: inlineScript
-          inlineScript: |
-            az vm create --name ProvisionedVM --image UbuntuLTS --location japaneast --generate-ssh-keys --resource-group $(environmentName);
+          inlineScript: az vm create --name ProvisionedVM --image UbuntuLTS --location japaneast --generate-ssh-keys --resource-group $(environmentName);
     
       - task: AzureCLI@2
         displayName: 'Register VM'
         continueOnError: true
         inputs:
           azureSubscription: 'ServiceConnectionForAzureTestPipeline'
-          scriptType: pscore
+          scriptType: 'pscore'
           scriptLocation: inlineScript
           inlineScript: |
             az vm extension set `
@@ -68,9 +67,9 @@ stages:
         deploy:
           steps:
           - task: NodeTool@0
+            displayName: 'Install Node.js'
             inputs:
               versionSpec: '16.x'
-            displayName: 'Install Node.js'
           - script: |
               git clone https://github.com/blue0316/puppeteer-test-project.git
             displayName: 'git clone'
