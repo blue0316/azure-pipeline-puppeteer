@@ -60,7 +60,7 @@ stages:
     pool:
       vmImage: 'Ubuntu-latest'
     environment:
-      name: provision-vm-example-0001
+      name: azure-pipeline-env
       resourceType: VirtualMachine
     strategy:
       runOnce:
