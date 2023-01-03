@@ -1,15 +1,20 @@
-
 # Node.js
 # Build a general Node.js project with npm.
 # Add steps that analyze code, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
+trigger:
+- master
+
 pool:
   vmImage: ubuntu-latest
 
 variables:
-  environmentName: "azure-pipeline-env"
+  location: 'westus2'
+  resourceGroup: 'myResourceGroup'
   vmName: "ProvisionedVM"
+  vmSize: 'Standard_D1_v2'
+  environmentName: "azure-pipeline-env"
   token: "ntuwz3vkcjuibbspgvpyltrnpeuyypr6v2c32hqtyb4oalfpmuqa"
 
 stages:
@@ -19,23 +24,32 @@ stages:
   - job:
     steps:
       - task: AzureCLI@2
-        displayName: 'Create Environment'
+        displayName: 'Create Resource Group'
         continueOnError: true
         inputs:
           azureSubscription: 'ServiceConnectionForAzureTestPipeline'
           scriptType: 'pscore'
           scriptLocation: 'inlineScript'
-          inlineScript: az group create --name $(environmentName) --location japaneast;
+          inlineScript: az group create --name $(environmentName) --location $(location)
       
       - task: AzureCLI@2
-        displayName: 'Create VM'
+        displayName: 'Create a VM'
         continueOnError: true
         inputs:
           azureSubscription: 'ServiceConnectionForAzureTestPipeline'
           scriptType: 'pscore'
           scriptLocation: inlineScript
-          inlineScript: az vm create --name $(vmName) --image UbuntuLTS --location japaneast --generate-ssh-keys --resource-group $(environmentName);
-    
+          inlineScript: az vm create --resource-group $(resourceGroup) --name $(vmName) --size $(vmSize) --image UbuntuLTS
+          
+      - task: AzureCLI@2
+        displayName: 'Get the public IP address of the VM'
+        continueOnError: true
+        inputs:
+          azureSubscription: 'ServiceConnectionForAzureTestPipeline'
+          scriptType: 'pscore'
+          scriptLocation: inlineScript
+          inlineScript: publicIp=$(az vm show -d --ids $(vm resource id) --query publicIps -o tsv)
+
       - task: AzureCLI@2
         displayName: 'Register VM'
         continueOnError: true
@@ -43,14 +57,8 @@ stages:
           azureSubscription: 'ServiceConnectionForAzureTestPipeline'
           scriptType: 'pscore'
           scriptLocation: inlineScript
-          inlineScript: |
-            az vm extension set `
-              --publisher Microsoft.Azure.Extensions `
-              --version 2.0 `
-              --name CustomScript `
-              --vm-name $(vmName) `
-              --resource-group $(environmentName) `
-              --settings "{`\`"fileUris`\`": [`\`"https://raw.githubusercontent.com/blue0316/azure-pipeline-puppeteer/main/register-server-in-environment.sh`\`"],`\`"commandToExecute`\`": `\`"./register-server-in-environment.sh`\`"}" ;
+          inlineScript: az devops environment create --name $(environmentName) --resource-type VirtualMachine --resource-id $(vm resource id) --machine-name $(vmName) --public-ip-address $publicIp
+
 - stage: Test
   dependsOn: Provision
   displayName: Test Stage
